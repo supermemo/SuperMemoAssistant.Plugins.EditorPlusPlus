@@ -71,6 +71,7 @@ namespace SuperMemoAssistant.Plugins.EditorPlusPlus
         "AdvancedPasteWindow",
         "Open AdvancedPasteWindow",
         HotKeyScope.SM,
+        // Ctrl-Shift-V clashes with the KT move element shortcut
         new HotKey(Key.B, KeyModifiers.CtrlShift),
         OpenAdvancedPasteMenu
       );
