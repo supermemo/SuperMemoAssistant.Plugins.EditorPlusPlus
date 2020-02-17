@@ -36,6 +36,10 @@ using SuperMemoAssistant.Sys.IO.Devices;
 using System.Windows;
 using SuperMemoAssistant.Extensions;
 using SuperMemoAssistant.Plugins.EditorPlusPlus.UI;
+using HtmlAgilityPack;
+using SuperMemoAssistant.Extensions;
+using mshtml;
+
 
 namespace SuperMemoAssistant.Plugins.EditorPlusPlus
 {
@@ -67,13 +71,21 @@ namespace SuperMemoAssistant.Plugins.EditorPlusPlus
     /// <inheritdoc />
     protected override void PluginInit()
     {
+     Svc.HotKeyManager.RegisterGlobal(
+       "AdvancedPasteWindow",
+       "Open AdvancedPasteWindow",
+       HotKeyScope.SM,
+       // Ctrl-Shift-V clashes with the KT move element shortcut
+       new HotKey(Key.B, KeyModifiers.CtrlShift),
+       OpenAdvancedPasteMenu
+      );      
+
       Svc.HotKeyManager.RegisterGlobal(
-        "AdvancedPasteWindow",
-        "Open AdvancedPasteWindow",
+        "RemoveClozeHighlight",
+        "Remove cloze highlight",
         HotKeyScope.SM,
-        // Ctrl-Shift-V clashes with the KT move element shortcut
-        new HotKey(Key.B, KeyModifiers.CtrlShift),
-        OpenAdvancedPasteMenu
+        new HotKey(Key.R, KeyModifiers.CtrlShift),
+        RemoveClozeHighlight
       );
     }
 
@@ -89,7 +101,28 @@ namespace SuperMemoAssistant.Plugins.EditorPlusPlus
       );
     }
 
-    
+    public void RemoveClozeHighlight()
+    {
+      IControlHtml ctrlHtml = Svc.SM.UI.ElementWdw.ControlGroup.FocusedControl.AsHtml();
+
+      if (ctrlHtml != null && !string.IsNullOrEmpty(ctrlHtml.Text))
+      {
+        string html = ctrlHtml.Text;
+
+        var doc = new HtmlDocument();
+        doc.LoadHtml(html);
+        HtmlNodeCollection spanNodes = doc.DocumentNode.SelectNodes("//span");
+        foreach (HtmlNode span in spanNodes)
+        {
+          if (span.HasClass("clozed"))
+          {
+            span.Attributes.Remove("class");
+          }
+        }
+        ctrlHtml.Text = doc.DocumentNode.OuterHtml;
+      }
+    }
+
     /// <inheritdoc />
     public override void ShowSettings()
     {
