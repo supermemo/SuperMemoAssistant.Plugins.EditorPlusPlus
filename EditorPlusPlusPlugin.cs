@@ -75,7 +75,6 @@ namespace SuperMemoAssistant.Plugins.EditorPlusPlus
        "AdvancedPasteWindow",
        "Open AdvancedPasteWindow",
        HotKeyScope.SM,
-       // Ctrl-Shift-V clashes with the KT move element shortcut
        new HotKey(Key.B, KeyModifiers.CtrlShift),
        OpenAdvancedPasteMenu
       );      
@@ -84,7 +83,7 @@ namespace SuperMemoAssistant.Plugins.EditorPlusPlus
         "RemoveClozeHighlight",
         "Remove cloze highlight",
         HotKeyScope.SM,
-        new HotKey(Key.R, KeyModifiers.CtrlShift),
+        new HotKey(Key.R, KeyModifiers.CtrlAlt),
         RemoveClozeHighlight
       );
     }
