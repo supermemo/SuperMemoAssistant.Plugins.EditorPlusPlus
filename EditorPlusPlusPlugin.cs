@@ -111,15 +111,12 @@ namespace SuperMemoAssistant.Plugins.EditorPlusPlus
 
         var doc = new HtmlDocument();
         doc.LoadHtml(html);
-        HtmlNodeCollection spanNodes = doc.DocumentNode.SelectNodes("//span");
-        foreach (HtmlNode span in spanNodes)
+        var spanNodes = doc.DocumentNode.SelectNodes("//span[contains(@class, 'clozed')]");
+        if (spanNodes != null)
         {
-          if (span.HasClass("clozed"))
-          {
-            span.Attributes.Remove("class");
-          }
+            spanNodes.ForEach(n => n.Attributes.Remove("class"));
+            ctrlHtml.Text = doc.DocumentNode.OuterHtml;
         }
-        ctrlHtml.Text = doc.DocumentNode.OuterHtml;
       }
     }
 
